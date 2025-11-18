@@ -24,6 +24,8 @@ function App() {
 
   const handleCancelProject = () => {
     setNewProjectStatus(false);
+    // to avoid open previous project when cancled
+    setProjectOpened();
   };
 
   return (
@@ -34,6 +36,7 @@ function App() {
           projectData={projectData}
           projectOpened={projectOpened}
           setProjectOpened={setProjectOpened}
+          setNewProjectStatus={setNewProjectStatus}
         />
         <main className="w-5/6 h-full">
           {newProjectStatus ? (
@@ -45,7 +48,7 @@ function App() {
               setProjectData={setProjectData}
               setProjectOpened={setProjectOpened}
             />
-          ) : projectOpened ? (
+          ) : projectOpened >= 0 ? (
             <Project
               projectData={projectData}
               setProjectData={setProjectData}
