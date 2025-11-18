@@ -10,20 +10,44 @@ const Project = ({
 }) => {
   const taskRef = useRef();
 
+  function formatDateShortMonth(dateString) {
+    const date = new Date(dateString);
+
+    const month = date.toLocaleString("en-US", { month: "short" });
+    const day = date.getDate();
+    const year = date.getFullYear();
+
+    return `${month} ${day}, ${year}`;
+  }
+
+  console.log(formatDateShortMonth(projectData[projectOpened].dueDate));
+
   const handleDelete = () => {
-    setProjectData((prevData) =>
-      prevData.filter((eachObj) => eachObj !== projectOpened)
-    );
+    setProjectData((prevData) => {
+      const tempData = prevData.map((eachProj) => ({
+        ...eachProj,
+        tasks: [...eachProj.tasks],
+      }));
+      tempData.splice(projectOpened, 1);
+      return tempData;
+    });
     setProjectOpened();
   };
 
   const handleTask = () => {
     let taskRefValue = taskRef.current.value.trim();
+
     if (taskRefValue) {
-      setProjectOpened((prevData) => {
-        const tempdata = { ...prevData };
-        tempdata.tasks = [...tempdata.tasks, taskRefValue];
-        return tempdata;
+      setProjectData((prevData) => {
+        const tempData = prevData.map((eachProj) => ({
+          ...eachProj,
+          tasks: [...eachProj.tasks],
+        }));
+        tempData[projectOpened].tasks = [
+          ...tempData[projectOpened].tasks,
+          taskRefValue,
+        ];
+        return tempData;
       });
       taskRef.current.value = "";
     } else {
@@ -31,9 +55,16 @@ const Project = ({
     }
   };
 
-  const handleClearTask = (eachTask) => {
-    console.log(eachTask);
-    // setProjectData(projectOpened.tasks.filter((x) => x != eachTask));
+  const handleClearTask = (eachTask, index) => {
+    // main project data handle (while adding the tasks)
+    setProjectData((prevData) => {
+      const tempData = prevData.map((eachProj) => ({
+        ...eachProj,
+        tasks: [...eachProj.tasks],
+      }));
+      tempData[projectOpened].tasks.splice(index, 1);
+      return tempData;
+    });
   };
 
   return (
@@ -42,16 +73,18 @@ const Project = ({
       <div className="w-3/4 ">
         <div className="flex w-full justify-between">
           <h1 className="text-gray-800 text-3xl font-bold">
-            {projectOpened.title}
+            {projectData[projectOpened].title}
           </h1>
-          <button onClick={handleDelete}>Delete</button>
+          <button onClick={handleDelete} className="hover:text-red-500">
+            Delete
+          </button>
         </div>
         <section className="flex flex-col gap-4 border-b-4 border-gray-400">
           <p className="text-gray-400 text-lg font-semibold">
-            {projectOpened.dueDate}
+            {formatDateShortMonth(projectData[projectOpened].dueDate)}
           </p>
           <p className="text-gray-600 text-lg font-semibold pb-8">
-            {projectOpened.description}
+            {projectData[projectOpened].description}
           </p>
         </section>
       </div>
@@ -66,13 +99,16 @@ const Project = ({
           />
           <button onClick={handleTask}>Add Task</button>
         </div>
-        {projectOpened.tasks.length > 0 ? (
+        {projectData[projectOpened].tasks.length > 0 ? (
           <section className="bg-gray-100 mt-8 px-2 py-4 rounded-md shadow-xl">
-            {projectOpened.tasks.map((eachTask, index) => {
+            {projectData[projectOpened].tasks.map((eachTask, index) => {
               return (
                 <div key={index} className="flex py-2 px-4 justify-between">
                   <p>• &nbsp; {eachTask}</p>
-                  <button onClick={() => handleClearTask(eachTask)}>
+                  <button
+                    onClick={() => handleClearTask(eachTask, index)}
+                    className="hover:text-red-500"
+                  >
                     Clear
                   </button>
                 </div>

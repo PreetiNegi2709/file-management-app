@@ -5,9 +5,11 @@ const SideBar = ({
   projectData,
   projectOpened,
   setProjectOpened,
+  setNewProjectStatus,
 }) => {
-  const handleProject = (projSelected) => {
-    setProjectOpened(projSelected);
+  const handleProject = (projIndex) => {
+    setProjectOpened(projIndex);
+    setNewProjectStatus(false);
   };
   return (
     <div className="w-1/6 max-w-1/6 min-w-1/2 bg-black h-full pt-12 px-4 rounded-tr-lg">
@@ -26,7 +28,7 @@ const SideBar = ({
             <button
               key={index}
               className="text-start text-white font-normal tracking-wider w-full hover:bg-gray-800 active:bg-gray-800 p-1 rounder-md"
-              onClick={(e) => handleProject(eachProj)}
+              onClick={(e) => handleProject(index)}
             >
               {eachProj.title}
             </button>

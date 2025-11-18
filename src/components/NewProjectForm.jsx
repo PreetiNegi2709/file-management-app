@@ -5,6 +5,7 @@ const NewProjectForm = ({
   newProjectStatus,
   setNewProjectStatus,
   projectData,
+  setProjectOpened,
   setProjectData,
 }) => {
   const titleRef = useRef();
@@ -27,6 +28,7 @@ const NewProjectForm = ({
         },
       ]);
       setNewProjectStatus(false);
+      setProjectOpened();
     } else {
       alert("please enter all fields");
     }
