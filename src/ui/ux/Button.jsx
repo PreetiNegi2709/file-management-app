@@ -1,7 +1,14 @@
 import React from "react";
 
-const Button = () => {
-  return <div>Button</div>;
+const Button = ({ children, ...props }) => {
+  return (
+    <button
+      className="py-2 px-4 text-xs md:text-base bg-stone-700 text-stone-400 hover:bg-stone-600 hover:text-stone-100 rounded-md"
+      {...props}
+    >
+      {children}
+    </button>
+  );
 };
 
 export default Button;

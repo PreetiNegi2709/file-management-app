@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import Tasks from "./Tasks.jsx";
 
 const Project = ({
   projectData,
@@ -7,7 +8,21 @@ const Project = ({
   setProjectOpened,
   setNewProjectStatus,
   newProjectStatus,
+  // new prop
+  project,
+  onDelete,
+  onAddTask,
+  onDeleteTask,
+  tasks,
+  selectedProject,
 }) => {
+  // new code start
+  const formattedDate = new Date(project.dueDate).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+  // new code ended
   const taskRef = useRef();
 
   function formatDateShortMonth(dateString) {
@@ -20,7 +35,7 @@ const Project = ({
     return `${month} ${day}, ${year}`;
   }
 
-  console.log(formatDateShortMonth(projectData[projectOpened].dueDate));
+  // console.log(formatDateShortMonth(projectData[projectOpened].dueDate));
 
   const handleDelete = () => {
     setProjectData((prevData) => {
@@ -68,57 +83,31 @@ const Project = ({
   };
 
   return (
-    <div className="w-full py-12 pl-20">
-      {/* project details */}
-      <div className="w-3/4 ">
-        <div className="flex w-full justify-between">
-          <h1 className="text-gray-800 text-3xl font-bold">
-            {projectData[projectOpened].title}
+    <div className="w-[35rem] mt-16 ">
+      {/* new code */}
+      <header className="pb-4 mb-4 border-b-2 border-stone-300">
+        <div className="flex item-center justify-between">
+          <h1 className="text-3xl font-bold mb-2 text-stone-600">
+            {project.title}
           </h1>
-          <button onClick={handleDelete} className="hover:text-red-500">
+          <button
+            className="text-stone-600 hover:text-stone-950"
+            onClick={onDelete}
+          >
             Delete
           </button>
         </div>
-        <section className="flex flex-col gap-4 border-b-4 border-gray-400">
-          <p className="text-gray-400 text-lg font-semibold">
-            {formatDateShortMonth(projectData[projectOpened].dueDate)}
-          </p>
-          <p className="text-gray-600 text-lg font-semibold pb-8">
-            {projectData[projectOpened].description}
-          </p>
-        </section>
-      </div>
-      {/* tasks */}
-      <div className="w-3/4 pt-8">
-        <h1 className="text-gray-800 text-2xl font-semibold">Tasks</h1>
-        <div className="flex gap-8 pt-4">
-          <input
-            type="text"
-            className="bg-gray-200 px-2 py-1 rounded-md w-1/2"
-            ref={taskRef}
-          />
-          <button onClick={handleTask}>Add Task</button>
-        </div>
-        {projectData[projectOpened].tasks.length > 0 ? (
-          <section className="bg-gray-100 mt-8 px-2 py-4 rounded-md shadow-xl">
-            {projectData[projectOpened].tasks.map((eachTask, index) => {
-              return (
-                <div key={index} className="flex py-2 px-4 justify-between">
-                  <p>• &nbsp; {eachTask}</p>
-                  <button
-                    onClick={() => handleClearTask(eachTask, index)}
-                    className="hover:text-red-500"
-                  >
-                    Clear
-                  </button>
-                </div>
-              );
-            })}
-          </section>
-        ) : (
-          <p className="mt-8">This project doesn't have any task yet.</p>
-        )}
-      </div>
+        <p className="mb-4 text-stone-400 ">{formattedDate}</p>
+        <p className="mb-4 whitespace-pre-wrap text-stone-400 ">
+          {project.description}
+        </p>
+      </header>
+      <Tasks
+        onAddTask={onAddTask}
+        onDeleteTask={onDeleteTask}
+        tasks={tasks}
+        selectedProject={selectedProject}
+      />
     </div>
   );
 };
