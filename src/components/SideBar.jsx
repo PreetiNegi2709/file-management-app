@@ -1,4 +1,4 @@
-import React from "react";
+import Button from "../ui/ux/Button.jsx";
 
 const SideBar = ({
   handleNewProject,
@@ -6,36 +6,44 @@ const SideBar = ({
   projectOpened,
   setProjectOpened,
   setNewProjectStatus,
+  // new props
+  onStartAddProject,
+  projects,
+  onSelectProject,
+  selectedProjectId,
 }) => {
   const handleProject = (projIndex) => {
     setProjectOpened(projIndex);
     setNewProjectStatus(false);
   };
   return (
-    <div className="w-1/6 max-w-1/6 min-w-1/2 bg-black h-full pt-12 px-4 rounded-tr-lg">
-      <h1 className="text-white font-semibold tracking-wider text-xl">
+    <aside className="w-1/3 bg-stone-900 py-16 px-8 text-stone-50 md:w-72 rounded-r-xl">
+      <h1 className="mb-8 font-bold uppercase md:text-xl text-stone-200 tracking-wider">
         YOUR PROJECTS
       </h1>
-      <button
-        className="bg-gray-800 text-white py-2 px-8 mt-8 mb-8 rounded-md"
-        onClick={handleNewProject}
-      >
-        + Add Project
-      </button>
-      <div className="flex flex-col gap-3 items-start">
-        {projectData.map((eachProj, index) => {
+      <Button onClick={onStartAddProject}>+ Add Project</Button>
+      <ul className="mt-8">
+        {projects.map((project) => {
+          let cssClasses =
+            "w-full text-left px-2 py-1 rounded-sm my-1 hover:text-stone-200 hover:bg-stone-800 ";
+          if (project.id === selectedProjectId) {
+            cssClasses += "text-stone-200 bg-stone-800";
+          } else {
+            cssClasses += "text-stone-400 ";
+          }
           return (
-            <button
-              key={index}
-              className="text-start text-white font-normal tracking-wider w-full hover:bg-gray-800 active:bg-gray-800 p-1 rounder-md"
-              onClick={(e) => handleProject(index)}
-            >
-              {eachProj.title}
-            </button>
+            <li key={project.id}>
+              <button
+                className={cssClasses}
+                onClick={() => onSelectProject(project.id)}
+              >
+                {project.title}
+              </button>
+            </li>
           );
         })}
-      </div>
-    </div>
+      </ul>
+    </aside>
   );
 };
 
